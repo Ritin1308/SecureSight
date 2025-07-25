@@ -1,31 +1,37 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+// File: pages/api/incidents/[id]/resolve.ts
+
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { PrismaClient } from '.prisma/client'; // Make sure this path is correct
 
 const prisma = new PrismaClient();
 
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: { id: string } }
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
 ) {
+  // 1. Ensure this is a PATCH request
+  if (req.method !== 'PATCH') {
+    res.setHeader('Allow', ['PATCH']);
+    return res.status(405).end(`Method ${req.method} Not Allowed`);
+  }
+
   try {
-    const incidentId = parseInt(params.id);
-    
+    // 2. Get the incident ID from the query
+    const incidentId = parseInt(req.query.id as string);
+
     if (isNaN(incidentId)) {
-      return NextResponse.json(
-        { error: 'Invalid incident ID' },
-        { status: 400 }
-      );
+      return res.status(400).json({ error: 'Invalid incident ID' });
     }
 
     const updatedIncident = await prisma.incident.update({
       where: { id: incidentId },
       data: {
         resolved: true,
-        resolvedAt: new Date()
+        resolvedAt: new Date(),
       },
       include: {
-        camera: true
-      }
+        camera: true,
+      },
     });
 
     // Transform data to match frontend TypeScript interface
@@ -41,17 +47,15 @@ export async function PATCH(
       priority: updatedIncident.priority.toLowerCase() as 'low' | 'medium' | 'high' | 'critical',
       resolved: updatedIncident.resolved,
       resolvedAt: updatedIncident.resolvedAt,
-      resolvedBy: undefined, // You can add this field to your schema if needed
+      resolvedBy: undefined,
       createdAt: updatedIncident.createdAt,
-      updatedAt: updatedIncident.updatedAt
+      updatedAt: updatedIncident.updatedAt,
     };
-
-    return NextResponse.json(transformedIncident);
+    
+    // 3. Send the response using the `res` object
+    return res.status(200).json(transformedIncident);
   } catch (error) {
     console.error('Error resolving incident:', error);
-    return NextResponse.json(
-      { error: 'Failed to resolve incident' },
-      { status: 500 }
-    );
+    return res.status(500).json({ error: 'Failed to resolve incident' });
   }
 }
