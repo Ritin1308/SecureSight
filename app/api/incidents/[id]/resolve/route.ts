@@ -1,26 +1,22 @@
-// File: pages/api/incidents/[id]/resolve.ts
+// File: app/api/incidents/[id]/resolve/route.ts
 
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '.prisma/client'; // Make sure this path is correct
 
 const prisma = new PrismaClient();
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: { id: string } }
 ) {
-  // 1. Ensure this is a PATCH request
-  if (req.method !== 'PATCH') {
-    res.setHeader('Allow', ['PATCH']);
-    return res.status(405).end(`Method ${req.method} Not Allowed`);
-  }
-
   try {
-    // 2. Get the incident ID from the query
-    const incidentId = parseInt(req.query.id as string);
+    const incidentId = parseInt(params.id);
 
     if (isNaN(incidentId)) {
-      return res.status(400).json({ error: 'Invalid incident ID' });
+      return NextResponse.json(
+        { error: 'Invalid incident ID' },
+        { status: 400 }
+      );
     }
 
     const updatedIncident = await prisma.incident.update({
@@ -51,11 +47,13 @@ export default async function handler(
       createdAt: updatedIncident.createdAt,
       updatedAt: updatedIncident.updatedAt,
     };
-    
-    // 3. Send the response using the `res` object
-    return res.status(200).json(transformedIncident);
+
+    return NextResponse.json(transformedIncident);
   } catch (error) {
     console.error('Error resolving incident:', error);
-    return res.status(500).json({ error: 'Failed to resolve incident' });
+    return NextResponse.json(
+      { error: 'Failed to resolve incident' },
+      { status: 500 }
+    );
   }
 }
