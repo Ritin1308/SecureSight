@@ -1,7 +1,7 @@
 // File: app/api/incidents/[id]/resolve/route.ts
 
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '.prisma/client'; // Make sure this path is correct
+import { PrismaClient } from '.prisma/client'; // Ensure this import path is correct for your project
 
 const prisma = new PrismaClient();
 
@@ -30,7 +30,8 @@ export async function PATCH(
       },
     });
 
-    // Transform data to match frontend TypeScript interface
+    // NOTE: This transformation assumes your Prisma schema has these fields.
+    // Adjust the fields below to exactly match your schema and frontend types.
     const transformedIncident = {
       id: updatedIncident.id,
       type: updatedIncident.type,
