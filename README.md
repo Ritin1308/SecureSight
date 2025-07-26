@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🔒 SecureSight Dashboard
 
-## Getting Started
+SecureSight is a fictional CCTV monitoring platform designed to manage up to 3 real-time video feeds. It detects and flags security threats like unauthorized access, weapon presence, and facial recognition matches.
 
-First, run the development server:
+This project is a technical assessment that focuses on building a responsive **dashboard interface** with a connected backend for managing and resolving incidents.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- 🔎 **Incident Detection View**  
+  Left-side panel shows the selected incident’s video thumbnail or placeholder.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- 📋 **Incident List**  
+  Right-side sidebar displays a scrollable list of flagged events with:
+  - Threat type icon
+  - Camera location
+  - Timestamp
+  - “Resolve” button with optimistic UI updates
 
-## Learn More
+- 🧭 **Top Navigation Bar**
 
-To learn more about Next.js, take a look at the following resources:
+- ✅ **Optimistic API Actions**  
+  Incidents can be resolved with immediate UI feedback.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🧱 Tech Stack
 
-## Deploy on Vercel
+| Layer        | Technology                      |
+| ------------ | ------------------------------- |
+| Frontend     | [Next.js 15 (App Router)](https://nextjs.org/docs) |
+| Styling      | [Tailwind CSS](https://tailwindcss.com) |
+| Backend/API  | Built-in Next.js API routes     |
+| Database     | SQLite (via [Prisma ORM](https://www.prisma.io/)) |
+| Seed Script  | TypeScript-based Prisma seeding |
+| Deployment   | Local (can be deployed to Vercel/Supabase) |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📸 Data Models
+
+```ts
+// prisma/schema.prisma
+
+model Camera {
+  id        Int        @id @default(autoincrement())
+  name      String
+  location  String
+  incidents Incident[]
+}
+
+model Incident {
+  id           Int      @id @default(autoincrement())
+  cameraId     Int
+  camera       Camera   @relation(fields: [cameraId], references: [id])
+  type         String
+  tsStart      DateTime
+  tsEnd        DateTime
+  thumbnailUrl String
+  resolved     Boolean  @default(false)
+}
