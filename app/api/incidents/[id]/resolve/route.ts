@@ -1,11 +1,9 @@
 // File: app/api/incidents/[id]/resolve/route.ts
 
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '.prisma/client'; // Ensure this import path is correct for your project
+import { prisma } from '@/lib/prisma';
 
-const prisma = new PrismaClient();
-
-// Add this line to make the route dynamic
+// Make the route dynamic
 export const dynamic = 'force-dynamic';
 
 export async function PATCH(
@@ -33,8 +31,6 @@ export async function PATCH(
       },
     });
 
-    // NOTE: This transformation assumes your Prisma schema has these fields.
-    // Adjust the fields below to exactly match your schema and frontend types.
     const transformedIncident = {
       id: updatedIncident.id,
       type: updatedIncident.type,
