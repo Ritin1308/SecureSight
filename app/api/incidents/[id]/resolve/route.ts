@@ -5,6 +5,9 @@ import { PrismaClient } from '.prisma/client'; // Ensure this import path is cor
 
 const prisma = new PrismaClient();
 
+// Add this line to make the route dynamic
+export const dynamic = 'force-dynamic';
+
 export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } }
