@@ -60,19 +60,20 @@ model Incident {
   thumbnailUrl String
   resolved     Boolean  @default(false)
 }
+
 ## 📷 Screenshots
 
 ### 🗂️ Dashboard
 
 ![Dashboard](screenshots/dashboard.png)
 
-### 🗂️ camera
+### 🗂️ Camera
 
-![cameras](screenshots/camera.png)
+![Cameras](screenshots/camera.png)
 
-###🗂️ incidents
+### 🗂️ Incidents
 
-![incidents](screenshots/incidents.png)
+![Incidents](screenshots/incidents.png)
 
 
 
