@@ -65,15 +65,15 @@ model Incident {
 
 ### 🗂️ Dashboard
 
-![Dashboard](screenshots/dashboard.png)
+C:\Users\ritin\Desktop\securesight-dashboard\screenshots\dashboard.png
 
 ### 🗂️ Camera
+C:\Users\ritin\Desktop\securesight-dashboard\screenshots\camera.png
 
-![Cameras](screenshots/camera.png)
 
 ### 🗂️ Incidents
 
-![Incidents](screenshots/incidents.png)
+C:\Users\ritin\Desktop\securesight-dashboard\screenshots\incidents.png
 
 
 
